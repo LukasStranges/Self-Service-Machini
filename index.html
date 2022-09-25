@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html lang="pr-br">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <title>Self Service Order</title>
+    </head>
+
+    <body>
+        
+        <main id="app">
+            
+            <section class="items">
+                <h4>Selecione os produtos</h4>
+                <div 
+                    v-for="(produtos, index) in products" :key="index" 
+                    class="product"
+                    @click="produtos.active = !produtos.active"
+                    :class="{ selected : produtos.active }"
+                    
+                >
+                    <div class="photo">
+                        <img :src="produtos.photo">
+                    </div>
+                    <div class="description">
+                        <span class="name">{{ produtos.name}}</span>
+                        <span class="price">{{produtos.price}}</span>
+                        <div class="quantity-area" v-if="produtos.active">
+                            <button @click.stop="produtos.quantity --" :disabled="produtos.quantity <= 1">-</button>
+                            <span class="quantity">{{ produtos.quantity}}</span>
+                            <button @click.stop="produtos.quantity ++">+</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="summary" v-if="total() > 0">
+                <strong>Resumo do pedido</strong>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for=" (iten, index) in products" ::key="index">
+                            <template v-if="iten.active">
+                                <td>{{ iten.quantity + 'x' + iten.name }}</td>
+                                <td>{{ (iten.quantity * iten.price ).toFixed(2)}}</td>
+                            </template>
+                            
+                        </tr>
+                        
+                        <tr>
+                            <th>Total</th>
+                            <th>{{ total() }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </main>
+        
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="scripts.js"></script>
+    </body>
+
+</html>
